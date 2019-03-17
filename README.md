@@ -1,5 +1,5 @@
 # ScratchyBoy
-Python script for converting Scratch 3 projects to Scratch 2 I wrote in a few hours (don't expect it to be good)
+Python script for porting Scratch 3 projects to Scratch 2 I wrote in a few hours (don't expect it to be good)
 
 ## Usage
 Run the script and select a sb3 file (Scratch 3 Project)
