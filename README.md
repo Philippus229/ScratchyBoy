@@ -10,5 +10,5 @@ Run the script and select a sb3 file (Scratch 3 Project)
 ## TODO
 - add remaining blocks
 - fix block inputs
-- add loop support
+- add support for control blocks (semi-functional version in test_WIP.py)
 - add remaining rotation styles
