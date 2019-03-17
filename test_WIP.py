@@ -28,9 +28,9 @@ sb3to2commands = [
     ["event_whenkeypressed", "whenKeyPressed"],
     ["event_whenthisspriteclicked", "whenClicked"],
     ["event_whenbackdropswitchesto", "whenSceneStarts"],
-    ["operator_equals", "="], #fix this
-    ["operator_lt", "<"], #fix this
-    ["operator_gt", ">"], #fix this
+    ["operator_equals", "="],
+    ["operator_lt", "<"],
+    ["operator_gt", ">"],
     ["looks_sayforsecs", "say:duration:elapsed:from:"],
     ["looks_say", "say:"],
     ["looks_thinkforsecs", "think:duration:elapsed:from:"],
@@ -69,7 +69,7 @@ sb3to2commands = [
     ["pen_setPenShadeToNumber", "setPenShadeTo:"],
     ["pen_changePenSizeBy", "changePenSizeBy:"],
     ["pen_setPenSizeTo", "penSize:"]
-] #TODO: add remaining commands
+] #TODO: add remaining blocks
 
 sb3to2rotStyles = [
     ["all around", "normal"],
@@ -103,8 +103,8 @@ def get2command(b):
     c = c3to2(b.opcode)
     i = b.inputs
     f = b.fields
-    ss = b.substack #unused atm
-    ss2 = b.substack2 #unused atm
+    ss = b.substack
+    ss2 = b.substack2
     cond = b.condition
     s = [i[i0][1][1] for i0 in i if len(i[i0][1]) > 1]
     tmpoutthing = []
