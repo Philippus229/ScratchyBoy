@@ -11,3 +11,4 @@ Run the script and select a sb3 file (Scratch 3 Project)
 - add remaining blocks
 - fix block inputs
 - add loop support
+- add remaining rotation styles
