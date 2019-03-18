@@ -2,14 +2,12 @@
 Python script for porting Scratch 3 projects to Scratch 2 (don't expect it to be good)
 
 ## Usage
-Run the script and select a sb3 file (Scratch 3 Project)
+Run the script and select an sb3 file (Scratch 3 Project)
 
 ## Requirements
 - Python 3.x
 
 ## TODO
-- add remaining blocks
+- add remaining 3-to-2 translations
 - fix block inputs
-- add support for control blocks (semi-functional version in test_WIP.py)
-- add remaining rotation styles
 - add support for selection fields
