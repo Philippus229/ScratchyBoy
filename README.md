@@ -9,5 +9,4 @@ Run the script and select an sb3 file (Scratch 3 Project)
 
 ## TODO
 - add remaining 3-to-2 translations
-- fix block inputs
-- add support for selection fields
+- add support for selection fields (work in test_wip.py)
