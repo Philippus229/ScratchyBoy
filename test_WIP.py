@@ -28,9 +28,9 @@ sb3to2commands = [
     ["event_whenkeypressed", "whenKeyPressed"],
     ["event_whenthisspriteclicked", "whenClicked"],
     ["event_whenbackdropswitchesto", "whenSceneStarts"],
-    ["operator_equals", "="],
-    ["operator_lt", "<"],
-    ["operator_gt", ">"],
+    ["operator_equals", "="], #fix this
+    ["operator_lt", "<"], #fix this
+    ["operator_gt", ">"], #fix this
     ["looks_sayforsecs", "say:duration:elapsed:from:"],
     ["looks_say", "say:"],
     ["looks_thinkforsecs", "think:duration:elapsed:from:"],
@@ -69,7 +69,7 @@ sb3to2commands = [
     ["pen_setPenShadeToNumber", "setPenShadeTo:"],
     ["pen_changePenSizeBy", "changePenSizeBy:"],
     ["pen_setPenSizeTo", "penSize:"]
-] #TODO: add remaining blocks
+] #TODO: add remaining commands
 
 sb3to2rotStyles = [
     ["all around", "normal"],
@@ -106,26 +106,26 @@ def get2command(b):
     ss = b.substack
     ss2 = b.substack2
     cond = b.condition
-    s = [i[i0][1][1] for i0 in i if len(i[i0][1]) > 1]
-    tmpoutthing = []
-    tmpoutthing.append(c)
+    s = [i[i0][1][1] for i0 in i if type(i[i0][1]) == list]
+    tmpoutthing = [c]
     for s0 in s:
         tmpoutthing.append(s0)
     if not cond == None:
         tmpoutthing.append(cond)
-    for ssb in ss:
-        tmpoutthing.append(get2command(ssb))
-    for ss2b in ss2:
-        tmpoutthing.append(get2command(ss2b))
+    ssbs = [get2command(ssb) for ssb in ss]
+    ss2bs = [get2command(ss2b) for ss2b in ss2]
+    if len(ssbs) > 0:
+        tmpoutthing.append(ssbs)
+    if len(ss2bs) > 0:
+        tmpoutthing.append(ss2bs)
     return tmpoutthing
 
 def get2commandTop(b):
     c = c3to2(b.opcode)
     i = b.inputs
     f = b.fields
-    s = [i[i0][1][1] for i0 in i if len(i[i0][1]) > 1]
-    tmpoutthing = []
-    tmpoutthing.append(c)
+    s = [i[i0][1][1] for i0 in i if type(i[i0][1]) == list]
+    tmpoutthing = [c]
     for s0 in s:
         tmpoutthing.append(s0)
     return tmpoutthing
@@ -239,9 +239,7 @@ class sb3TopBlock:
         self.children = [] #temporary until I find a better solution
 
     def getv2(self):
-        sb2 = f"[{self.x},{self.y},[{get2commandTop(self)}"
-        for c in self.children:
-            sb2 += f",{get2command(c)}"
+        sb2 = [self.x, self.y, [get2command(c) for c in self.children]]
         return sb2
 
 class sb3Project:
@@ -391,8 +389,7 @@ project.stages.append(curStage)
 for s in project.stages:
     for o in s.children:
         print("-" + o.name + "-")
-        for b in o.blocks:
-            print(b.getv2())
+        print([b.getv2() for b in o.blocks])
                             
 '''
 sb2json = convert3to2json(project)
