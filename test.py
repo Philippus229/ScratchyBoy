@@ -1,7 +1,7 @@
 import json, zipfile
 from tkinter.filedialog import askopenfilename
 
-sb3to2commands = [
+sb3to2translations = [
     ["motion_movesteps", "forward:"],
     ["motion_turnright", "turnRight:"],
     ["motion_turnleft", "turnLeft:"],
@@ -68,12 +68,9 @@ sb3to2commands = [
     ["pen_changePenShadeBy", "changePenShadeBy:"],
     ["pen_setPenShadeToNumber", "setPenShadeTo:"],
     ["pen_changePenSizeBy", "changePenSizeBy:"],
-    ["pen_setPenSizeTo", "penSize:"]
-] #TODO: add remaining commands
-
-sb3to2rotStyles = [
-    ["all around", "normal"],
-] #TODO: add remaining rotation styles
+    ["pen_setPenSizeTo", "penSize:"],
+    ["all around", "normal"]
+] #TODO: add remaining blocks, rotation styles, etc.
 
 sb3sounds = []
 sb3soundsmd5 = []
@@ -94,14 +91,11 @@ def getCostumeID(aID):
 def getCostumeIDmd5(md5):
     return sb3costumesmd5.index(md5)
 
-def c3to2(c):
-    return [e[1] for e in sb3to2commands if e[0] == c][0]
-
-def get2rotStyle(rS):
-    return [e[1] for e in sb3to2rotStyles if e[0] == rS][0]
+def t3to2(c):
+    return [e[1] for e in sb3to2translations if e[0] == c][0]
 
 def get2command(b):
-    c = c3to2(b.opcode)
+    c = t3to2(b.opcode)
     i = b.inputs
     f = b.fields
     ss = b.substack
@@ -122,7 +116,7 @@ def get2command(b):
     return tmpoutthing
 
 def get2commandTop(b):
-    c = c3to2(b.opcode)
+    c = t3to2(b.opcode)
     i = b.inputs
     f = b.fields
     s = [i[i0][1][1] for i0 in i if type(i[i0][1]) == list]
@@ -306,7 +300,7 @@ def convert3to2json(p):
                 "scratchY": o.y,
                 "scale": o.size/100,
                 "direction": o.direction,
-                "rotationStyle": get2rotStyle(o.rotationStyle),
+                "rotationStyle": t3to2(o.rotationStyle),
                 "isDraggable": o.draggable,
                 "indexInLibrary": o.layerOrder,
                 "visible": o.visible,
