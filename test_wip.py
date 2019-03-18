@@ -94,6 +94,11 @@ def getCostumeIDmd5(md5):
 def t3to2(c):
     return [e[1] for e in sb3to2translations if e[0] == c][0]
 
+nofieldblocks = [
+    "comeToFront",
+    "goBackByLayers:"
+]
+
 def get2command(b):
     c = t3to2(b.opcode)
     i = b.inputs
@@ -103,10 +108,13 @@ def get2command(b):
     s = [i[i0][1][1] for i0 in i if type(i[i0][1]) == list]
     s2 = [f[f0][0] for f0 in f]# if type(f[f0]) == list]
     tmpoutthing = [c]
+    if not c in nofieldblocks:
+        for s1 in s2:
+            tmpoutthing.append(s1)
     for s0 in s:
+        if type(s0) == str and s0[0] == '#':
+            s0 = int(s0.replace("#", ""), 16)
         tmpoutthing.append(s0)
-    for s1 in s2:
-        tmpoutthing.append(s1)
     if not cond == None:
         tmpoutthing.append(cond)
     ssbss = [[get2command(ssb) for ssb in sss] for sss in ss]
@@ -121,10 +129,10 @@ def get2commandTop(b):
     s = [i[i0][1][1] for i0 in i if type(i[i0][1]) == list]
     s2 = [f[f0][0] for f0 in f]# if type(f[f0]) == list]
     tmpoutthing = [c]
-    for s0 in s:
-        tmpoutthing.append(s0)
     for s1 in s2:
         tmpoutthing.append(s1)
+    for s0 in s:
+        tmpoutthing.append(s0)
     return tmpoutthing
     
 class sb3Costume:
