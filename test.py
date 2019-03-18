@@ -28,9 +28,9 @@ sb3to2translations = [
     ["event_whenkeypressed", "whenKeyPressed"],
     ["event_whenthisspriteclicked", "whenClicked"],
     ["event_whenbackdropswitchesto", "whenSceneStarts"],
-    ["operator_equals", "="], #fix this
-    ["operator_lt", "<"], #fix this
-    ["operator_gt", ">"], #fix this
+    ["operator_equals", "="],
+    ["operator_lt", "<"],
+    ["operator_gt", ">"],
     ["looks_sayforsecs", "say:duration:elapsed:from:"],
     ["looks_say", "say:"],
     ["looks_thinkforsecs", "think:duration:elapsed:from:"],
