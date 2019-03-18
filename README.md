@@ -3,6 +3,7 @@ Python script for porting Scratch 3 projects to Scratch 2 (don't expect it to be
 
 ## Usage
 Run the script and select an sb3 file (Scratch 3 Project)
+IMPORTANT: The costumes have to be raster graphics, not vector graphics!
 
 ## Requirements
 - Python 3.x
