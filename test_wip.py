@@ -24,10 +24,17 @@ sb3to2translations = [
     ["control_wait_until", "doWaitUntil"],
     ["control_repeat_until", "doUntil"],
     ["control_forever", "doForever"],
+    ["control_start_as_clone", "whenCloned"],
+    ["control_create_clone_of", "createCloneOf"],
+    ["control_delete_this_clone", "deleteClone"],
     ["event_whenflagclicked", "whenGreenFlag"],
     ["event_whenkeypressed", "whenKeyPressed"],
     ["event_whenthisspriteclicked", "whenClicked"],
     ["event_whenbackdropswitchesto", "whenSceneStarts"],
+    ["event_whengreaterthan", "whenSensorGreaterThan"],
+    ["event_whenbroadcastreceived", "whenIReceive"],
+    ["event_broadcast", "broadcast:"],
+    ["event_broadcastandwait", "doBroadcastAndWait"],
     ["operator_equals", "="],
     ["operator_lt", "<"],
     ["operator_gt", ">"],
@@ -47,17 +54,22 @@ sb3to2translations = [
     ["looks_setsizeto", "setSizeTo:"],
     ["looks_gotofrontback", "comeToFront"],
     ["looks_goforwardbackwardlayers", "goBackByLayers:"],
+    ["looks_costumenumbername", "costumeIndex"],
+    ["looks_backdropnumbername", "sceneName"],
+    ["looks_size", "scale"],
     ["sound_play", "playSound:"],
     ["sound_playuntildone", "doPlaySoundAndWait"],
     ["sound_stopallsounds", "stopAllSounds"],
     ["sound_changevolumeby", "changeVolumeBy:"],
     ["sound_setvolumeto", "setVolumeTo:"],
+    ["sound_volume", "volume"],
     ["music_playDrumForBeats", "playDrum"],
     ["music_restForBeats", "rest:elapsed:from:"],
     ["music_playNoteForBeats", "noteOn:duration:elapsed:from:"],
     ["music_setInstrument", "instrument:"],
     ["music_changeTempo", "changeTempoBy:"],
     ["music_setTempo", "setTempoTo:"],
+    ["music_getTempo", "tempo"],
     ["pen_clear", "clearPenTrails"],
     ["pen_stamp", "stampCostume"],
     ["pen_penDown", "putPenDown"],
@@ -69,6 +81,24 @@ sb3to2translations = [
     ["pen_setPenShadeToNumber", "setPenShadeTo:"],
     ["pen_changePenSizeBy", "changePenSizeBy:"],
     ["pen_setPenSizeTo", "penSize:"],
+    ["sensing_answer", "answer"],
+    ["sensing_resettimer", "timerReset"],
+    ["sensing_touchingobject", "touching:"],
+    ["sensing_touchingcolor", "touchingColor:"],
+    ["sensing_mousex", "mouseX"],
+    ["sensing_coloristouchingcolor", "color:sees:"],
+    ["sensing_mousey", "mouseY"],
+    ["sensing_loudness", "soundLevel"],
+    ["sensing_keypressed", "keyPressed:"],
+    ["sensing_mousedown", "mousePressed"],
+    ["sensing_current", "timeAndDate"],
+    ["sensing_dayssince2000", "timestamp"],
+    ["sensing_username", "getUserName"],
+    ["sensing_timer", "timer"],
+    ["sensing_askandwait", "doAsk"],
+    ["videoSensing_videoToggle", "setVideoState"],
+    ["videoSensing_setVideoTransparency", "setVideoTransparency"],
+    ["videoSensing_videoOn", "senseVideoMotion"],
     ["all around", "normal"]
 ] #TODO: add remaining blocks, rotation styles, etc.
 
@@ -92,47 +122,48 @@ def getCostumeIDmd5(md5):
     return sb3costumesmd5.index(md5)
 
 def t3to2(c):
-    return [e[1] for e in sb3to2translations if e[0] == c][0]
+    try:
+        return [e[1] for e in sb3to2translations if e[0] == c][0]
+    except:
+        print("oof, couldn't find " + c)
+        return ""
 
 nofieldblocks = [
     "comeToFront",
-    "goBackByLayers:"
+    "goBackByLayers:",
+    "costumeIndex",
+    "sceneName"
 ]
 
 def get2command(b):
     c = t3to2(b.opcode)
-    i = b.inputs
-    f = b.fields
-    ss = b.substacks
-    cond = b.condition
-    s = [i[i0][1][1] for i0 in i if type(i[i0][1]) == list]
-    s2 = [f[f0][0] for f0 in f]# if type(f[f0]) == list]
-    tmpoutthing = [c]
+    f = [b.fields[f0][0] for f0 in b.fields]
+    i = []
+    for i0 in b.inputs:
+        if type(i0) == str and i0[0] == '#':
+            i.append(int(b.inputs[i0].replace("#", ""), 16))
+        else:
+            i.append(b.inputs[i0])
+    tmpoutthing = []
+    if not c == "":
+        tmpoutthing.append(c)
     if not c in nofieldblocks:
-        for s1 in s2:
-            tmpoutthing.append(s1)
-    for s0 in s:
-        if type(s0) == str and s0[0] == '#':
-            s0 = int(s0.replace("#", ""), 16)
-        tmpoutthing.append(s0)
-    if not cond == None:
-        tmpoutthing.append(cond)
-    ssbss = [[get2command(ssb) for ssb in sss] for sss in ss]
-    for ssbs in ssbss:
-        tmpoutthing.append(ssbs)
+        for f0 in f:
+            tmpoutthing.append(f0)
+    for i0 in i:
+        tmpoutthing.append(i0)
     return tmpoutthing
 
 def get2commandTop(b):
     c = t3to2(b.opcode)
-    i = b.inputs
-    f = b.fields
-    s = [i[i0][1][1] for i0 in i if type(i[i0][1]) == list]
-    s2 = [f[f0][0] for f0 in f]# if type(f[f0]) == list]
+    i = [b.inputs[i0] for i0 in b.inputs]
+    f = [b.fields[f0][0] for f0 in b.fields]
     tmpoutthing = [c]
-    for s1 in s2:
-        tmpoutthing.append(s1)
-    for s0 in s:
-        tmpoutthing.append(s0)
+    if not c in nofieldblocks:
+        for f0 in f:
+            tmpoutthing.append(f0)
+    for i0 in i:
+        tmpoutthing.append(i0)
     return tmpoutthing
     
 class sb3Costume:
@@ -199,41 +230,40 @@ class sb3Stage:
         self.textToSpeechLanguage = tTSL
         self.children = []
 
+def getIndexStuff(i, b):
+    for ib in i:
+        if type(i[ib][1]) == str and i[ib][1] in b:
+            cB = b[i[ib][1]]
+            curBlock = sb3Block(cB["opcode"], cB["next"], cB["inputs"], cB["fields"], cB["shadow"], b)
+            tmpstack = [get2command(curBlock)]
+            while not curBlock.next == None:
+                cB = b[curBlock.next]
+                curBlock = sb3Block(cB["opcode"], cB["next"], cB["inputs"], cB["fields"], cB["shadow"], b)
+                tmpstack.append(get2command(curBlock))
+            if len(tmpstack) == 1 and not "substack" in ib.lower():
+                if type(tmpstack[0]) == list and len(tmpstack[0]) == 1: #TODO: find different condition to check for (I don't wanna create a list with blocks that need this)
+                    i[ib] = tmpstack[0][0]
+                else:
+                    i[ib] = tmpstack[0]
+            else:
+                i[ib] = tmpstack
+        else:
+            i[ib] = i[ib][1][1]
+    return i
+
 class sb3Block:
     def __init__(self, o, n, i, f, s, b):
         self.opcode = o
         self.next = n
-        self.inputs = i
+        self.inputs = getIndexStuff(i, b)
         self.fields = f
         self.shadow = s
-        self.condition = None
-        self.substacks = []
-        if "CONDITION" in i:
-            cB = b[i["CONDITION"][1]]
-            curBlock = sb3Block(cB["opcode"], cB["next"], cB["inputs"], cB["fields"], cB["shadow"], b)
-            self.condition = get2command(curBlock)
-        for ssb2 in [i[ssb] for ssb in i if "SUBSTACK" in ssb]:
-            cB = b[ssb2[1]]
-            curBlock = sb3Block(cB["opcode"], cB["next"], cB["inputs"], cB["fields"], cB["shadow"], b)
-            tmpstack = [curBlock]
-            while not curBlock.next == None:
-                cB = b[curBlock.next]
-                curBlock = sb3Block(cB["opcode"], cB["next"], cB["inputs"], cB["fields"], cB["shadow"], b)
-                tmpstack.append(curBlock)
-            self.substacks.append(tmpstack)
-        for fb in [fb2 for fb2 in i if type(i[fb2][1]) == str]:
-            if i[fb][1] in b:
-                if "fields" in b[i[fb][1]]:
-                    x = [b[i[fb][1]]["fields"][ff][0] for ff in b[i[fb][1]]["fields"]]
-                    if len(x) > 0:
-                        print(x[0])
-                        i[fb][1] = [0, x[0]]
 
 class sb3TopBlock:
-    def __init__(self, o, n, i, f, s, x, y):
+    def __init__(self, o, n, i, f, s, x, y, b):
         self.opcode = o
         self.next = n
-        self.inputs = i
+        self.inputs = getIndexStuff(i, b)
         self.fields = f
         self.shadow = s
         self.x = x
@@ -342,7 +372,7 @@ for t in sb3json["targets"]:
     blocks = t["blocks"]
     for b in [blocks[nb] for nb in blocks if blocks[nb]["topLevel"]]:
         scriptcount += 1
-        curTopBlock = sb3TopBlock(b["opcode"], b["next"], b["inputs"], b["fields"], b["shadow"], b["x"], b["y"])
+        curTopBlock = sb3TopBlock(b["opcode"], b["next"], b["inputs"], b["fields"], b["shadow"], b["x"], b["y"], blocks)
         curBlock = curTopBlock
         while not curBlock.next == None:
             cB = blocks[curBlock.next]
