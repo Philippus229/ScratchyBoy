@@ -10,4 +10,4 @@ IMPORTANT: The costumes have to be raster graphics, not vector graphics!
 
 ## TODO
 - add remaining 3-to-2 translations
-- add support for selection fields (work in test_wip.py)
+- fix some stuff with blocks getting interpreted as strings
